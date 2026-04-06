@@ -35,6 +35,7 @@ config.toml
 cdk.out
 cdk.context.json
 cdk.json
+.DS_Store
 /test-reports/
 junit.xml
 /coverage/

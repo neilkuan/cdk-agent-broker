@@ -38,6 +38,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'cdk.out',
     'cdk.context.json',
     'cdk.json',
+    '.DS_Store',
   ],
   npmignore: [
     'config.toml',
@@ -53,4 +54,14 @@ const project = new awscdk.AwsCdkConstructLibrary({
     module: 'cdk_agent_broker',
   },
 });
+
+// Fix Mergify deprecated `delete_head_branch` in pull_request_rules actions
+// Move it to queue_rules instead
+const mergifyFile = project.tryFindObjectFile('.mergify.yml');
+if (mergifyFile) {
+  // Remove deprecated delete_head_branch from pull_request_rules actions
+  // Use GitHub's "Automatically delete head branches" setting instead
+  mergifyFile.addDeletionOverride('pull_request_rules.0.actions.delete_head_branch');
+}
+
 project.synth();
