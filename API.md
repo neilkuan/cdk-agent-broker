@@ -9,7 +9,7 @@
 ```typescript
 import { AgentBroker } from 'cdk-agent-broker'
 
-new AgentBroker(scope: Construct, id: string, props: AgentBrokerProps)
+new AgentBroker(scope: Construct, id: string, props?: AgentBrokerProps)
 ```
 
 | **Name** | **Type** | **Description** |
@@ -32,7 +32,7 @@ new AgentBroker(scope: Construct, id: string, props: AgentBrokerProps)
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-agent-broker.AgentBroker.Initializer.parameter.props"></a>
+##### `props`<sup>Optional</sup> <a name="props" id="cdk-agent-broker.AgentBroker.Initializer.parameter.props"></a>
 
 - *Type:* <a href="#cdk-agent-broker.AgentBrokerProps">AgentBrokerProps</a>
 
@@ -121,8 +121,9 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#cdk-agent-broker.AgentBroker.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-agent-broker.AgentBroker.property.cluster">cluster</a></code> | <code>aws-cdk-lib.aws_ecs.ICluster</code> | *No description.* |
+| <code><a href="#cdk-agent-broker.AgentBroker.property.cluster">cluster</a></code> | <code>aws-cdk-lib.aws_ecs.Cluster</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBroker.property.service">service</a></code> | <code>aws-cdk-lib.aws_ecs.FargateService</code> | *No description.* |
+| <code><a href="#cdk-agent-broker.AgentBroker.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | *No description.* |
 
 ---
 
@@ -141,10 +142,10 @@ The tree node.
 ##### `cluster`<sup>Required</sup> <a name="cluster" id="cdk-agent-broker.AgentBroker.property.cluster"></a>
 
 ```typescript
-public readonly cluster: ICluster;
+public readonly cluster: Cluster;
 ```
 
-- *Type:* aws-cdk-lib.aws_ecs.ICluster
+- *Type:* aws-cdk-lib.aws_ecs.Cluster
 
 ---
 
@@ -155,6 +156,16 @@ public readonly service: FargateService;
 ```
 
 - *Type:* aws-cdk-lib.aws_ecs.FargateService
+
+---
+
+##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-agent-broker.AgentBroker.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
 
 ---
 
@@ -175,21 +186,13 @@ const agentBrokerProps: AgentBrokerProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-agent-broker.AgentBrokerProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.assignPublicIp">assignPublicIp</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.cpu">cpu</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#cdk-agent-broker.AgentBrokerProps.property.enableFargateSpot">enableFargateSpot</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.image">image</a></code> | <code>aws-cdk-lib.aws_ecs.ContainerImage</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.memoryLimitMiB">memoryLimitMiB</a></code> | <code>number</code> | *No description.* |
-
----
-
-##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-agent-broker.AgentBrokerProps.property.vpc"></a>
-
-```typescript
-public readonly vpc: IVpc;
-```
-
-- *Type:* aws-cdk-lib.aws_ec2.IVpc
+| <code><a href="#cdk-agent-broker.AgentBrokerProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | *No description.* |
+| <code><a href="#cdk-agent-broker.AgentBrokerProps.property.vpcCidr">vpcCidr</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -213,6 +216,16 @@ public readonly cpu: number;
 
 ---
 
+##### `enableFargateSpot`<sup>Optional</sup> <a name="enableFargateSpot" id="cdk-agent-broker.AgentBrokerProps.property.enableFargateSpot"></a>
+
+```typescript
+public readonly enableFargateSpot: boolean;
+```
+
+- *Type:* boolean
+
+---
+
 ##### `image`<sup>Optional</sup> <a name="image" id="cdk-agent-broker.AgentBrokerProps.property.image"></a>
 
 ```typescript
@@ -230,6 +243,26 @@ public readonly memoryLimitMiB: number;
 ```
 
 - *Type:* number
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="cdk-agent-broker.AgentBrokerProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+---
+
+##### `vpcCidr`<sup>Optional</sup> <a name="vpcCidr" id="cdk-agent-broker.AgentBrokerProps.property.vpcCidr"></a>
+
+```typescript
+public readonly vpcCidr: string;
+```
+
+- *Type:* string
 
 ---
 
