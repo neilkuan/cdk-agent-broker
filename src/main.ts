@@ -1,6 +1,7 @@
 import { Size } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
+import * as s3assets from 'aws-cdk-lib/aws-s3-assets';
 import { Construct } from 'constructs';
 
 export interface AgentBrokerProps {
@@ -13,6 +14,7 @@ export interface AgentBrokerProps {
   readonly enableFargateSpot?: boolean;
   readonly ebsSizeGiB?: number;
   readonly ebsMountPath?: string;
+  readonly configPath?: string;
 }
 
 export class AgentBroker extends Construct {
@@ -47,8 +49,10 @@ export class AgentBroker extends Construct {
     const container = taskDefinition.addContainer('app', {
       image: props.image ?? ecs.ContainerImage.fromRegistry('ghcr.io/thepagent/agent-broker:dd7e1ca'),
       portMappings: [{ containerPort: 80 }],
+      essential: true,
     });
 
+    // EBS volume for /home/agent
     const volume = new ecs.ServiceManagedVolume(this, 'EbsVolume', {
       name: 'agent-data',
       managedEBSVolume: {
@@ -63,6 +67,45 @@ export class AgentBroker extends Construct {
     });
 
     taskDefinition.addVolume(volume);
+
+    // Config volume: download config.toml from S3 via init container
+    if (props.configPath) {
+      const configAsset = new s3assets.Asset(this, 'ConfigAsset', {
+        path: props.configPath,
+      });
+
+      taskDefinition.addVolume({
+        name: 'agent-config',
+      });
+
+      const initContainer = taskDefinition.addContainer('config-init', {
+        image: ecs.ContainerImage.fromRegistry('amazon/aws-cli:latest'),
+        essential: false,
+        command: [
+          'sh', '-c',
+          `aws s3 cp s3://${configAsset.s3BucketName}/${configAsset.s3ObjectKey} /etc/agent-broker/config.toml`,
+        ],
+      });
+
+      initContainer.addMountPoints({
+        sourceVolume: 'agent-config',
+        containerPath: '/etc/agent-broker',
+        readOnly: false,
+      });
+
+      container.addContainerDependencies({
+        container: initContainer,
+        condition: ecs.ContainerDependencyCondition.SUCCESS,
+      });
+
+      container.addMountPoints({
+        sourceVolume: 'agent-config',
+        containerPath: '/etc/agent-broker',
+        readOnly: true,
+      });
+
+      configAsset.grantRead(taskDefinition.taskRole);
+    }
 
     this.service = new ecs.FargateService(this, 'Service', {
       cluster: this.cluster,

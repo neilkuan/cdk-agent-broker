@@ -1,5 +1,6 @@
+import * as path from 'path';
 import { App, Stack } from 'aws-cdk-lib';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { AgentBroker } from '../src';
 
@@ -43,4 +44,26 @@ test('assignPublicIp creates only public subnets', () => {
   template.resourcePropertiesCountIs('AWS::EC2::Subnet', {
     MapPublicIpOnLaunch: true,
   }, 1);
+});
+
+test('configPath adds init container and config volume', () => {
+  const app = new App();
+  const stack = new Stack(app, 'TestStack');
+
+  new AgentBroker(stack, 'AgentBroker', {
+    configPath: path.join(__dirname, 'fixtures', 'config.toml'),
+  });
+
+  const template = Template.fromStack(stack);
+  template.hasResourceProperties('AWS::ECS::TaskDefinition', {
+    ContainerDefinitions: Match.arrayWith([
+      Match.objectLike({
+        Name: 'app',
+        MountPoints: Match.arrayWith([
+          Match.objectLike({ ContainerPath: '/etc/agent-broker' }),
+        ]),
+      }),
+      Match.objectLike({ Name: 'config-init', Essential: false }),
+    ]),
+  });
 });
