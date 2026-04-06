@@ -21,12 +21,12 @@ export class AgentBroker extends Construct {
     });
 
     const taskDefinition = new ecs.FargateTaskDefinition(this, 'TaskDef', {
-      memoryLimitMiB: props.memoryLimitMiB ?? 512,
-      cpu: props.cpu ?? 256,
+      memoryLimitMiB: props.memoryLimitMiB ?? 4096,
+      cpu: props.cpu ?? 2048,
     });
 
     taskDefinition.addContainer('app', {
-      image: props.image ?? ecs.ContainerImage.fromRegistry('amazon/amazon-ecs-sample'),
+      image: props.image ?? ecs.ContainerImage.fromRegistry('ghcr.io/thepagent/agent-broker:dd7e1ca'),
       portMappings: [{ containerPort: 80 }],
     });
 
