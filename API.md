@@ -188,6 +188,8 @@ const agentBrokerProps: AgentBrokerProps = { ... }
 | --- | --- | --- |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.assignPublicIp">assignPublicIp</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.cpu">cpu</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#cdk-agent-broker.AgentBrokerProps.property.ebsMountPath">ebsMountPath</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-agent-broker.AgentBrokerProps.property.ebsSizeGiB">ebsSizeGiB</a></code> | <code>number</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.enableFargateSpot">enableFargateSpot</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.image">image</a></code> | <code>aws-cdk-lib.aws_ecs.ContainerImage</code> | *No description.* |
 | <code><a href="#cdk-agent-broker.AgentBrokerProps.property.memoryLimitMiB">memoryLimitMiB</a></code> | <code>number</code> | *No description.* |
@@ -210,6 +212,26 @@ public readonly assignPublicIp: boolean;
 
 ```typescript
 public readonly cpu: number;
+```
+
+- *Type:* number
+
+---
+
+##### `ebsMountPath`<sup>Optional</sup> <a name="ebsMountPath" id="cdk-agent-broker.AgentBrokerProps.property.ebsMountPath"></a>
+
+```typescript
+public readonly ebsMountPath: string;
+```
+
+- *Type:* string
+
+---
+
+##### `ebsSizeGiB`<sup>Optional</sup> <a name="ebsSizeGiB" id="cdk-agent-broker.AgentBrokerProps.property.ebsSizeGiB"></a>
+
+```typescript
+public readonly ebsSizeGiB: number;
 ```
 
 - *Type:* number

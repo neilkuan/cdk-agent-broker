@@ -1,3 +1,4 @@
+import { Size } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import { Construct } from 'constructs';
@@ -10,6 +11,8 @@ export interface AgentBrokerProps {
   readonly cpu?: number;
   readonly assignPublicIp?: boolean;
   readonly enableFargateSpot?: boolean;
+  readonly ebsSizeGiB?: number;
+  readonly ebsMountPath?: string;
 }
 
 export class AgentBroker extends Construct {
@@ -41,10 +44,25 @@ export class AgentBroker extends Construct {
       cpu: props.cpu ?? 2048,
     });
 
-    taskDefinition.addContainer('app', {
+    const container = taskDefinition.addContainer('app', {
       image: props.image ?? ecs.ContainerImage.fromRegistry('ghcr.io/thepagent/agent-broker:dd7e1ca'),
       portMappings: [{ containerPort: 80 }],
     });
+
+    const volume = new ecs.ServiceManagedVolume(this, 'EbsVolume', {
+      name: 'agent-data',
+      managedEBSVolume: {
+        size: Size.gibibytes(props.ebsSizeGiB ?? 10),
+        volumeType: ec2.EbsDeviceVolumeType.GP3,
+      },
+    });
+
+    volume.mountIn(container, {
+      containerPath: props.ebsMountPath ?? '/home/agent',
+      readOnly: false,
+    });
+
+    taskDefinition.addVolume(volume);
 
     this.service = new ecs.FargateService(this, 'Service', {
       cluster: this.cluster,
@@ -60,5 +78,7 @@ export class AgentBroker extends Construct {
         ? [{ capacityProvider: 'FARGATE_SPOT', weight: 1 }]
         : undefined,
     });
+
+    this.service.addVolume(volume);
   }
 }
