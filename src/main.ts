@@ -81,9 +81,13 @@ export class AgentBroker extends Construct {
       const initContainer = taskDefinition.addContainer('config-init', {
         image: ecs.ContainerImage.fromRegistry('amazon/aws-cli:latest'),
         essential: false,
+        environment: {
+          CONFIG_S3_BUCKET: configAsset.s3BucketName,
+          CONFIG_S3_KEY: configAsset.s3ObjectKey,
+        },
         command: [
           'sh', '-c',
-          `aws s3 cp s3://${configAsset.s3BucketName}/${configAsset.s3ObjectKey} /etc/agent-broker/config.toml`,
+          'aws s3 cp s3://$CONFIG_S3_BUCKET/$CONFIG_S3_KEY /etc/agent-broker/config.toml',
         ],
       });
 
