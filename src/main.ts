@@ -5,7 +5,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as s3assets from 'aws-cdk-lib/aws-s3-assets';
 import { Construct } from 'constructs';
 
-export interface AgentBrokerProps {
+export interface OpenABProps {
   readonly vpc?: ec2.IVpc;
   readonly vpcCidr?: string;
   readonly image?: ecs.ContainerImage;
@@ -20,14 +20,14 @@ export interface AgentBrokerProps {
   readonly logGroup?: logs.ILogGroup;
 }
 
-export class AgentBroker extends Construct {
+export class OpenAB extends Construct {
   public readonly vpc: ec2.IVpc;
   public readonly cluster: ecs.Cluster;
   public readonly service: ecs.FargateService;
   public readonly logGroup: logs.ILogGroup;
   public readonly dataBucket: s3.IBucket;
 
-  constructor(scope: Construct, id: string, props: AgentBrokerProps) {
+  constructor(scope: Construct, id: string, props: OpenABProps) {
     super(scope, id);
 
     const useSpot = props.enableFargateSpot ?? true;
@@ -94,19 +94,19 @@ export class AgentBroker extends Construct {
         [
           'mkdir -p $DATA_LOCAL_PATH',
           'aws s3 sync s3://$DATA_BUCKET/$DATA_S3_PREFIX $DATA_LOCAL_PATH || true',
-          'aws s3 cp s3://$CONFIG_S3_BUCKET/$CONFIG_S3_KEY /etc/agent-broker/config.toml',
+          'aws s3 cp s3://$CONFIG_S3_BUCKET/$CONFIG_S3_KEY /etc/openab/config.toml',
         ].join(' && '),
       ],
     });
 
     initContainer.addMountPoints(
       { sourceVolume: 'agent-data', containerPath: dataLocalPath, readOnly: false },
-      { sourceVolume: 'agent-config', containerPath: '/etc/agent-broker', readOnly: false },
+      { sourceVolume: 'agent-config', containerPath: '/etc/openab', readOnly: false },
     );
 
     // App container
     const container = taskDefinition.addContainer('app', {
-      image: props.image ?? ecs.ContainerImage.fromRegistry('ghcr.io/thepagent/agent-broker:dd7e1ca'),
+      image: props.image ?? ecs.ContainerImage.fromRegistry('ghcr.io/openabdev/openab:9c70cdd'),
       essential: true,
       logging: ecs.LogDrivers.awsLogs({ logGroup, streamPrefix: 'app' }),
     });
@@ -118,7 +118,7 @@ export class AgentBroker extends Construct {
 
     container.addMountPoints(
       { sourceVolume: 'agent-data', containerPath: dataLocalPath, readOnly: false },
-      { sourceVolume: 'agent-config', containerPath: '/etc/agent-broker', readOnly: true },
+      { sourceVolume: 'agent-config', containerPath: '/etc/openab', readOnly: true },
     );
 
     // Sidecar: periodic backup (every hour) + final backup on SIGTERM

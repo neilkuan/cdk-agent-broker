@@ -3,11 +3,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Neil Kuan',
   authorAddress: 'guan840912@gmail.com',
   cdkVersion: '2.170.0',
-  name: 'cdk-agent-broker',
+  name: 'cdk-openab',
   packageManager: javascript.NodePackageManager.NPM,
   projenrcTs: true,
-  repositoryUrl: 'https://github.com/neilkuan/cdk-agent-broker.git',
-  description: 'AWS CDK constructs library for Agent Broker',
+  repositoryUrl: 'https://github.com/neilkuan/cdk-openab.git',
+  description: 'AWS CDK constructs library for OpenAB',
 
   stability: 'experimental',
   defaultReleaseBranch: 'main',
@@ -50,8 +50,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   ],
   excludeTypescript: ['integ-index.ts'],
   publishToPypi: {
-    distName: 'cdk-agent-broker',
-    module: 'cdk_agent_broker',
+    distName: 'cdk-openab',
+    module: 'cdk_openab',
   },
 });
 

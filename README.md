@@ -1,6 +1,6 @@
-# cdk-agent-broker
+# cdk-openab
 
-AWS CDK constructs library for deploying [Agent Broker](https://github.com/thepagent/agent-broker) on AWS ECS Fargate.
+AWS CDK constructs library for deploying [Agent Broker](https://github.com/openabdev/openab) on AWS ECS Fargate.
 
 ##### Architecture
 
@@ -47,23 +47,23 @@ AWS CDK constructs library for deploying [Agent Broker](https://github.com/thepa
 
 ```bash
 # npm
-npm install cdk-agent-broker
+npm install cdk-openab
 
 # pip
-pip install cdk-agent-broker
+pip install cdk-openab
 ```
 
 ##### Usage
 
 ```ts
-import { AgentBroker } from 'cdk-agent-broker';
+import { OpenAB } from 'cdk-openab';
 
-new AgentBroker(this, 'Broker', {
+new OpenAB(this, 'Broker', {
   configPath: './config.toml',  // required: path to your local config.toml
 });
 
 // With custom settings
-new AgentBroker(this, 'Broker', {
+new OpenAB(this, 'Broker', {
   cpu: 2048,
   memoryLimitMiB: 4096,
   dataS3Prefix: 'my-agent-data',
@@ -77,7 +77,7 @@ new AgentBroker(this, 'Broker', {
 |------|------|---------|-------------|
 | `vpc` | `ec2.IVpc` | New VPC (public subnet) | 自訂 VPC |
 | `vpcCidr` | `string` | `10.168.0.0/16` | 新建 VPC 的 CIDR |
-| `image` | `ecs.ContainerImage` | `ghcr.io/thepagent/agent-broker:dd7e1ca` | Container image |
+| `image` | `ecs.ContainerImage` | `ghcr.io/thepagent/openab:dd7e1ca` | Container image |
 | `memoryLimitMiB` | `number` | `4096` | Task memory (MiB) |
 | `cpu` | `number` | `2048` | Task CPU units |
 | `assignPublicIp` | `boolean` | `true` | 是否分配 public IP |
@@ -85,11 +85,11 @@ new AgentBroker(this, 'Broker', {
 | `dataBucket` | `s3.IBucket` | 自動建立 | 持久化資料用的 S3 bucket |
 | `dataS3Prefix` | `string` | `agent-data` | S3 資料前綴 |
 | `dataLocalPath` | `string` | `/home/agent` | 資料掛載路徑 |
-| `configPath` | `string` | **必填** | 本地 config.toml 路徑，透過 S3 init container 掛載到 `/etc/agent-broker/config.toml` |
+| `configPath` | `string` | **必填** | 本地 config.toml 路徑，透過 S3 init container 掛載到 `/etc/openab/config.toml` |
 
 ##### Exposed Resources
 
-`AgentBroker` construct 暴露以下屬性，方便後續串接：
+`OpenAB` construct 暴露以下屬性，方便後續串接：
 
 - `broker.vpc` — VPC
 - `broker.cluster` — ECS Cluster

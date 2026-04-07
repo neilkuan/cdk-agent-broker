@@ -1,9 +1,9 @@
 {
-  "name": "cdk-agent-broker",
-  "description": "AWS CDK constructs library for Agent Broker",
+  "name": "cdk-openab",
+  "description": "AWS CDK constructs library for OpenAB",
   "repository": {
     "type": "git",
-    "url": "https://github.com/neilkuan/cdk-agent-broker.git"
+    "url": "https://github.com/neilkuan/cdk-openab.git"
   },
   "scripts": {
     "build": "npx projen build",
@@ -132,8 +132,8 @@
     "outdir": "dist",
     "targets": {
       "python": {
-        "distName": "cdk-agent-broker",
-        "module": "cdk_agent_broker"
+        "distName": "cdk-openab",
+        "module": "cdk_openab"
       }
     },
     "tsc": {
