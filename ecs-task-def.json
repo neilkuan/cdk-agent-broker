@@ -1,0 +1,108 @@
+{
+  "containerDefinitions": [
+    {
+      "command": [
+        "aws s3 cp s3://$CONFIG_S3_BUCKET/$CONFIG_S3_KEY /etc/openab/config.toml \u0026\u0026 chown -R 1000:1000 /etc/openab \u0026\u0026 (chown -R 1000:1000 /home/agent 2\u003e/dev/null; exit 0)"
+      ],
+      "cpu": 0,
+      "dockerLabels": {},
+      "entryPoint": [
+        "bash",
+        "-c"
+      ],
+      "environment": [
+        {
+          "name": "CONFIG_S3_KEY",
+          "value": "35e5e326e053142ca6dc4a2e7ee06157d13be795cf160fbcac32153e54cd2e10.toml"
+        },
+        {
+          "name": "CONFIG_S3_BUCKET",
+          "value": "cdk-hnb659fds-assets-807885433112-ap-east-2"
+        }
+      ],
+      "essential": false,
+      "image": "amazon/aws-cli:latest",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "OpenABInteg-BrokerLogGroupD8ADE883-DbJUCXEqbfWV",
+          "awslogs-region": "ap-east-2",
+          "awslogs-stream-prefix": "config-init"
+        }
+      },
+      "mountPoints": [
+        {
+          "containerPath": "/home/agent",
+          "readOnly": false,
+          "sourceVolume": "agent-data"
+        },
+        {
+          "containerPath": "/etc/openab",
+          "readOnly": false,
+          "sourceVolume": "agent-config"
+        }
+      ],
+      "name": "config-init",
+      "versionConsistency": ""
+    },
+    {
+      "cpu": 0,
+      "dependsOn": [
+        {
+          "condition": "SUCCESS",
+          "containerName": "config-init"
+        }
+      ],
+      "dockerLabels": {},
+      "essential": true,
+      "image": "ghcr.io/openabdev/openab:78f8d2c",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "OpenABInteg-BrokerLogGroupD8ADE883-DbJUCXEqbfWV",
+          "awslogs-region": "ap-east-2",
+          "awslogs-stream-prefix": "app"
+        }
+      },
+      "mountPoints": [
+        {
+          "containerPath": "/home/agent",
+          "readOnly": false,
+          "sourceVolume": "agent-data"
+        },
+        {
+          "containerPath": "/etc/openab",
+          "readOnly": true,
+          "sourceVolume": "agent-config"
+        }
+      ],
+      "name": "app",
+      "user": "1000:1000",
+      "versionConsistency": ""
+    }
+  ],
+  "cpu": "2048",
+  "executionRoleArn": "arn:aws:iam::807885433112:role/OpenABInteg-BrokerTaskDefExecutionRole9B4BE31F-OQM2Q2ePK55s",
+  "family": "OpenABIntegBrokerTaskDef644F1664",
+  "ipcMode": "",
+  "memory": "4096",
+  "networkMode": "awsvpc",
+  "pidMode": "",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "taskRoleArn": "arn:aws:iam::807885433112:role/OpenABInteg-BrokerTaskDefTaskRoleA3BA9222-nTdaQ9rUJO6Q",
+  "volumes": [
+    {
+      "name": "agent-data"
+    },
+    {
+      "host": {},
+      "name": "agent-config"
+    }
+  ]
+}

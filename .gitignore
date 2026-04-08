@@ -36,6 +36,9 @@ cdk.out
 cdk.context.json
 cdk.json
 .DS_Store
+src/lambda/.npm
+kiro
+.kiro
 /test-reports/
 junit.xml
 /coverage/

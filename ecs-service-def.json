@@ -1,0 +1,41 @@
+{
+  "availabilityZoneRebalancing": "ENABLED",
+  "deploymentConfiguration": {
+    "alarms": {
+      "enable": false,
+      "rollback": false
+    },
+    "bakeTimeInMinutes": 0,
+    "deploymentCircuitBreaker": {
+      "enable": false,
+      "rollback": false
+    },
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 50,
+    "strategy": "ROLLING"
+  },
+  "deploymentController": {
+    "type": "ECS"
+  },
+  "desiredCount": 1,
+  "enableECSManagedTags": false,
+  "enableExecuteCommand": true,
+  "healthCheckGracePeriodSeconds": 0,
+  "launchType": "FARGATE",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "assignPublicIp": "ENABLED",
+      "securityGroups": [
+        "sg-0ec7b5381f052849e"
+      ],
+      "subnets": [
+        "subnet-0433c70b5ad940089"
+      ]
+    }
+  },
+  "platformFamily": "Linux",
+  "platformVersion": "LATEST",
+  "propagateTags": "NONE",
+  "resourceManagementType": "CUSTOMER",
+  "schedulingStrategy": "REPLICA"
+}

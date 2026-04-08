@@ -17,6 +17,8 @@ new OpenAB(stack, 'Broker', {
   enableFargateSpot: false,
   configPath: process.env.CONFIG_PATH ?? './config.toml',
   image: cdk.aws_ecs.ContainerImage.fromRegistry('ghcr.io/openabdev/openab:78f8d2c'),
+  useS3Files: true,
+  rustLogLevel: 'debug',
 });
 
 app.synth();

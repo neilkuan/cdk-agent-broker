@@ -2,13 +2,12 @@ import { awscdk, javascript } from 'projen';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Neil Kuan',
   authorAddress: 'guan840912@gmail.com',
-  cdkVersion: '2.170.0',
+  cdkVersion: '2.248.0',
   name: 'cdk-openab',
-  packageManager: javascript.NodePackageManager.NPM,
+  packageManager: javascript.NodePackageManager.PNPM,
   projenrcTs: true,
   repositoryUrl: 'https://github.com/neilkuan/cdk-openab.git',
   description: 'AWS CDK constructs library for OpenAB',
-
   stability: 'experimental',
   defaultReleaseBranch: 'main',
   autoDetectBin: false,
@@ -39,6 +38,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'cdk.context.json',
     'cdk.json',
     '.DS_Store',
+    'src/lambda/.npm',
+    'kiro',
+    '.kiro'
   ],
   npmignore: [
     'config.toml',
@@ -47,6 +49,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'cdk.json',
     'integ-index.ts',
     '.DS_Store',
+    'src/lambda/.npm',
+    'kiro',
+    '.kiro'
   ],
   excludeTypescript: ['integ-index.ts'],
   publishToPypi: {

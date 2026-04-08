@@ -5,6 +5,9 @@ cdk.context.json
 cdk.json
 integ-index.ts
 .DS_Store
+src/lambda/.npm
+kiro
+.kiro
 /.projen/
 /test-reports/
 junit.xml

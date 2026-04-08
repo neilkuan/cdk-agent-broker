@@ -1,0 +1,7 @@
+{
+  "name": "s3files-custom-resource",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-s3files": "*"
+  }
+}

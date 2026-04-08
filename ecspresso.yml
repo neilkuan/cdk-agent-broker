@@ -1,0 +1,6 @@
+region: ap-east-2
+cluster: OpenABInteg-BrokerCluster2639E3CC-2G5Zh7x7m8sL
+service: OpenABInteg-BrokerServiceB23D0203-QnxYezNFjyeX
+service_definition: ecs-service-def.json
+task_definition: ecs-task-def.json
+timeout: "10m0s"
