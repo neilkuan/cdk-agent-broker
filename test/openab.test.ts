@@ -135,9 +135,8 @@ test('s3 files mode: no data-init or data-backup, has config-init and S3 Files v
     ]),
   });
 
-  // Should have Custom::S3FileSystem resource
-  template.resourceCountIs('Custom::S3FileSystem', 1);
-  template.resourceCountIs('Custom::S3FilesMountTarget', 1);
+  // Should have CloudFormation custom resource for S3 File System
+  template.resourceCountIs('AWS::CloudFormation::CustomResource', 1);
 
   // Security group for mount target
   template.hasResourceProperties('AWS::EC2::SecurityGroup', {

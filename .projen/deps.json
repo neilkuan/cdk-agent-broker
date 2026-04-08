@@ -92,6 +92,10 @@
       "type": "build"
     },
     {
+      "name": "@aws-sdk/client-s3files",
+      "type": "bundled"
+    },
+    {
       "name": "aws-cdk-lib",
       "version": "^2.248.0",
       "type": "peer"

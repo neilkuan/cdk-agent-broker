@@ -1,11 +1,12 @@
+import * as path from 'path';
 import { CfnResource, Duration, Fn, Stack } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
-import * as path from 'path';
 
 /**
  * Props for S3FileSystem.
@@ -123,26 +124,25 @@ export class S3FileSystem extends Construct implements ec2.IConnectable {
       }),
     ];
 
-    const lambdaCode = lambda.Code.fromAsset(path.join(__dirname, 'lambda'), {
-      bundling: {
-        image: lambda.Runtime.NODEJS_22_X.bundlingImage,
-        command: ['bash', '-c', 'cp -r /asset-input/* /asset-output/ && cd /asset-output && npm install --omit=dev'],
-      },
-    });
-
-    const onEventFn = new lambda.Function(this, 'OnEventFn', {
+    const onEventFn = new NodejsFunction(this, 'OnEventFn', {
       runtime: lambda.Runtime.NODEJS_22_X,
-      handler: 'on-event.handler',
+      entry: path.join(__dirname, 'lambda', 'on-event.ts'),
+      handler: 'handler',
       timeout: Duration.minutes(5),
-      code: lambdaCode,
+      bundling: {
+        externalModules: [],
+      },
     });
     lambdaPolicy.forEach(p => onEventFn.addToRolePolicy(p));
 
-    const isCompleteFn = new lambda.Function(this, 'IsCompleteFn', {
+    const isCompleteFn = new NodejsFunction(this, 'IsCompleteFn', {
       runtime: lambda.Runtime.NODEJS_22_X,
-      handler: 'is-complete.handler',
+      entry: path.join(__dirname, 'lambda', 'is-complete.ts'),
+      handler: 'handler',
       timeout: Duration.minutes(1),
-      code: lambdaCode,
+      bundling: {
+        externalModules: [],
+      },
     });
     lambdaPolicy.forEach(p => isCompleteFn.addToRolePolicy(p));
 

@@ -71,7 +71,7 @@ export class OpenAB extends Construct {
       memoryLimitMiB: props.memoryLimitMiB ?? 4096,
       cpu: props.cpu ?? 2048,
       runtimePlatform: {
-        cpuArchitecture: ecs.CpuArchitecture.ARM64,
+        cpuArchitecture: ecs.CpuArchitecture.X86_64,
         operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
       },
     });
@@ -191,7 +191,7 @@ export class OpenAB extends Construct {
       logging: ecs.LogDrivers.awsLogs({ logGroup, streamPrefix: 'app' }),
       environment: {
         RUST_LOG: this.rustLogLevel ?? 'info',
-      }
+      },
     });
 
     container.addContainerDependencies({
@@ -260,7 +260,7 @@ export class OpenAB extends Construct {
       logging: ecs.LogDrivers.awsLogs({ logGroup, streamPrefix: 'app' }),
       environment: {
         RUST_LOG: this.rustLogLevel ?? 'info',
-      }
+      },
     });
 
     container.addContainerDependencies({

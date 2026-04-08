@@ -40,7 +40,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '.DS_Store',
     'src/lambda/.npm',
     'kiro',
-    '.kiro'
+    '.kiro',
   ],
   npmignore: [
     'config.toml',
@@ -51,14 +51,18 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '.DS_Store',
     'src/lambda/.npm',
     'kiro',
-    '.kiro'
+    '.kiro',
   ],
-  excludeTypescript: ['integ-index.ts'],
+  bundledDeps: ['@aws-sdk/client-s3files'],
+  excludeTypescript: ['integ-index.ts', 'src/lambda/*.ts'],
   publishToPypi: {
     distName: 'cdk-openab',
     module: 'cdk_openab',
   },
 });
+
+// Copy lambda .ts source files to lib/ for NodejsFunction entry resolution
+project.postCompileTask.exec('cp -r src/lambda lib/');
 
 // Fix Mergify deprecated `delete_head_branch` in pull_request_rules actions
 // Move it to queue_rules instead

@@ -1,19 +1,22 @@
-const { S3FilesClient, GetFileSystemCommand, ListMountTargetsCommand, CreateMountTargetCommand } = require('@aws-sdk/client-s3files');
+import { S3FilesClient, GetFileSystemCommand, ListMountTargetsCommand, CreateMountTargetCommand } from '@aws-sdk/client-s3files';
+
 const client = new S3FilesClient();
 
-exports.handler = async (event) => {
+export const handler = async (event: any) => {
   console.log('isComplete event:', JSON.stringify(event));
   const fsId = event.PhysicalResourceId;
+
   if (event.RequestType === 'Delete') {
     try {
       const { status } = await client.send(new GetFileSystemCommand({ fileSystemId: fsId }));
       console.log('delete check status:', status);
       return { IsComplete: status === 'deleted' };
-    } catch (e) {
+    } catch (e: any) {
       if (e.name === 'ResourceNotFoundException') return { IsComplete: true };
       throw e;
     }
   }
+
   if (event.RequestType === 'Update') return { IsComplete: true };
 
   // Create: wait for FS available, then create mount target
@@ -36,6 +39,7 @@ exports.handler = async (event) => {
     }
     return { IsComplete: false };
   }
+
   console.log('creating mount target...');
   await client.send(new CreateMountTargetCommand({
     fileSystemId: fsId, subnetId: p.SubnetId, securityGroups: [p.SecurityGroupId],
